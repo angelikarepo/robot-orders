@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 5.0.1 (Python 3.9.13 on darwin)" generated="20230126 11:45:36.021" rpa="true" schemaversion="3">
+<suite id="s1" name="Tasks" source="/Users/angelikawalterowicz/Desktop/Robocorp robots/Robot 2/tasks.robot">
+<test id="s1-t1" name="Order robots from RobotSpareBin Industries Inc..." line="21">
+<kw name="Open the robot order website">
+<kw name="Get Secret" library="RPA.Robocorp.Vault">
+<var>${secret}</var>
+<arg>robotpage</arg>
+<doc>Read a secret from the configured source, e.g. Robocorp Vault,
+and return it as a ``Secret`` object.</doc>
+<msg timestamp="20230126 11:45:38.103" level="INFO">Protecting keyword: RPA.Robocorp.Vault.Get Secret</msg>
+<msg timestamp="20230126 11:45:40.233" level="INFO">Log level changed from NONE to INFO.</msg>
+<status status="PASS" starttime="20230126 11:45:38.102" endtime="20230126 11:45:40.232"/>
+</kw>
+<kw name="Open Available Browser" library="RPA.Browser.Selenium">
+<arg>${secret}[link]</arg>
+<doc>Attempts to open a browser on the user's device from a set of
+supported browsers. Automatically downloads a corresponding webdriver
+if none is already installed.</doc>
+<msg timestamp="20230126 11:45:40.234" level="INFO">Creating an instance of the Chrome WebDriver.</msg>
+<msg timestamp="20230126 11:45:40.249" level="INFO">====== WebDriver manager ======</msg>
+<msg timestamp="20230126 11:45:40.578" level="INFO">Creating an instance of the Chrome WebDriver.</msg>
+<msg timestamp="20230126 11:45:46.455" level="INFO">Created Chrome browser with arguments: --disable-dev-shm-usage --disable-web-security --allow-running-insecure-content --no-sandbox</msg>
+<msg timestamp="20230126 11:45:46.455" level="INFO" html="true">&lt;p&gt;Attempted combinations:&lt;/p&gt;&lt;div class="doc"&gt;&lt;table&gt;&lt;tr&gt;&lt;th&gt;Browser&lt;/th&gt;&lt;th&gt;Download&lt;/th&gt;&lt;th&gt;Error&lt;/th&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Chrome&lt;/td&gt;&lt;td&gt;False&lt;/td&gt;&lt;td&gt;Message: 'chromedriver' executable needs to be in PATH. Please see https://chromedriver.chromium.org/home
+&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Chrome&lt;/td&gt;&lt;td&gt;True&lt;/td&gt;&lt;td&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</msg>
+<msg timestamp="20230126 11:45:46.455" level="INFO">Opening url 'https://robotsparebinindustries.com/#/robot-order'</msg>
+<status status="PASS" starttime="20230126 11:45:40.233" endtime="20230126 11:45:47.385"/>
+</kw>
+<status status="PASS" starttime="20230126 11:45:38.102" endtime="20230126 11:45:47.386"/>
+</kw>
+<kw name="Get orders">
+<var>${orders}</var>
+<kw name="Add text input" library="RPA.Dialogs">
+<arg>input</arg>
+<arg>label=Provide orders link</arg>
+<tag>input</tag>
+<doc>Add a text input element</doc>
+<status status="PASS" starttime="20230126 11:45:47.387" endtime="20230126 11:45:47.387"/>
+</kw>
+<kw name="Run dialog" library="RPA.Dialogs">
+<var>${response}</var>
+<tag>dialog</tag>
+<doc>Create a dialog from all the defined elements and block
+until the user has handled it.</doc>
+<msg timestamp="20230126 11:45:47.388" level="INFO">Protecting keyword: RPA.Dialogs.Run dialog</msg>
+<msg timestamp="20230126 11:45:55.520" level="INFO">Log level changed from NONE to INFO.</msg>
+<status status="PASS" starttime="20230126 11:45:47.388" endtime="20230126 11:45:55.518"/>
+</kw>
+<kw name="Download" library="RPA.HTTP">
+<arg>${response.input}</arg>
+<arg>overwrite=True</arg>
+<doc>An alias for the ``HTTP Get`` keyword.</doc>
+<msg timestamp="20230126 11:45:55.522" level="INFO">Creating a new HTTP session</msg>
+<msg timestamp="20230126 11:45:55.522" level="INFO">Creating Session using : alias=rpasession_alias.httpsrobotsparebinindustries.com, url=https://robotsparebinindustries.com, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<status status="PASS" starttime="20230126 11:45:55.520" endtime="20230126 11:45:55.658"/>
+</kw>
+<kw name="Read table from CSV" library="RPA.Tables">
+<var>${orders}</var>
+<arg>orders.csv</arg>
+<arg>header=True</arg>
+<doc>Read a CSV file as a table.</doc>
+<msg timestamp="20230126 11:45:55.661" level="INFO">${orders} = Table(columns=['Order number', 'Head', 'Body', 'Legs', 'Address'], rows=20)</msg>
+<status status="PASS" starttime="20230126 11:45:55.658" endtime="20230126 11:45:55.661"/>
+</kw>
+<return>
+<value>${orders}</value>
+<status status="PASS" starttime="20230126 11:45:55.661" endtime="20230126 11:45:55.661"/>
+</return>
+<msg timestamp="20230126 11:45:55.662" level="INFO">${orders} = Table(columns=['Order number', 'Head', 'Body', 'Legs', 'Address'], rows=20)</msg>
+<status status="PASS" starttime="20230126 11:45:47.386" endtime="20230126 11:45:55.662"/>
+</kw>
+<for flavor="IN">
+<var>${row}</var>
+<value>@{orders}</value>
+<iter>
+<var name="${row}">{'Order number': '1', 'Head': '1', 'Body': '2', 'Legs': '3', 'Address': 'Address 123'}</var>
+<kw name="Close the annoying modal">
+<kw name="Click Button" library="RPA.Browser.Selenium">
+<arg>OK</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<msg timestamp="20230126 11:45:55.664" level="INFO">Clicking button 'OK'.</msg>
+<status status="PASS" starttime="20230126 11:45:55.664" endtime="20230126 11:45:55.992"/>
+</kw>
+<status status="PASS" starttime="20230126 11:45:55.663" endtime="20230126 11:45:55.992"/>
+</kw>
+<kw name="Fill the form">
+<arg>${row}</arg>
+<kw name="Select From List By Value" library="RPA.Browser.Selenium">
+<arg>head</arg>
+<arg>${row}[Head]</arg>
+<doc>Selects options from selection list ``locator`` by ``values``.</doc>
+<msg timestamp="20230126 11:45:55.993" level="INFO">Selecting options from selection list 'head' by value 1.</msg>
+<status status="PASS" starttime="20230126 11:45:55.993" endtime="20230126 11:45:56.128"/>
+</kw>
+<kw name="Click Button" library="RPA.Browser.Selenium">
+<arg>id:id-body-${row}[Body]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<msg timestamp="20230126 11:45:56.129" level="INFO">Clicking button 'id:id-body-2'.</msg>
+<status status="PASS" starttime="20230126 11:45:56.128" endtime="20230126 11:45:56.182"/>
+</kw>
+<kw name="Input Text" library="RPA.Browser.Selenium">
+<arg>xpath://label[contains(.,'3. Legs:')]/../input</arg>
+<arg>${row}[Legs]</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<msg timestamp="20230126 11:45:56.183" level="INFO">Typing text '3' into text field 'xpath://label[contains(.,'3. Legs:')]/../input'.</msg>
+<status status="PASS" starttime="20230126 11:45:56.183" endtime="20230126 11:45:56.348"/>
+</kw>
+<kw name="Input Text" library="RPA.Browser.Selenium">
+<arg>address</arg>
+<arg>${row}[Address]</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<msg timestamp="20230126 11:45:56.349" level="INFO">Typing text 'Address 123' into text field 'address'.</msg>
+<status status="PASS" starttime="20230126 11:45:56.349" endtime="20230126 11:45:56.454"/>
+</kw>
+<status status="PASS" starttime="20230126 11:45:55.992" endtime="20230126 11:45:56.454"/>
+</kw>
+<kw name="Preview the robot">
+<kw name="Click Button" library="RPA.Browser.Selenium">
+<arg>Preview</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<msg timestamp="20230126 11:45:56.455" level="INFO">Clicking button 'Preview'.</msg>
+<status status="PASS" starttime="20230126 11:45:56.455" endtime="20230126 11:45:56.996"/>
+</kw>
+<status status="PASS" starttime="20230126 11:45:56.454" endtime="20230126 11:45:56.996"/>
+</kw>
+<kw name="Submit the order">
+<kw name="Click Button" library="RPA.Browser.Selenium">
+<arg>Order</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<msg timestamp="20230126 11:45:56.997" level="INFO">Clicking button 'Order'.</msg>
+<status status="PASS" starttime="20230126 11:45:56.997" endtime="20230126 11:45:57.479"/>
+</kw>
+<status status="PASS" starttime="20230126 11:45:56.996" endtime="20230126 11:45:57.479"/>
+</kw>
+<kw name="Check if order is submitted">
+<kw name="Is Element Visible" library="RPA.Browser.Selenium">
+<var>${order}</var>
+<arg>id:receipt</arg>
+<doc>Is element visible</doc>
+<msg timestamp="20230126 11:45:57.731" level="INFO">Element 'id:receipt' is displayed.</msg>
+<msg timestamp="20230126 11:45:57.732" level="INFO">${order} = True</msg>
+<status status="PASS" starttime="20230126 11:45:57.480" endtime="20230126 11:45:57.732"/>
+</kw>
+<if>
+<branch type="IF" condition="${order} == ${False}">
+<kw name="Submit the order">
+<status status="NOT RUN" starttime="20230126 11:45:57.732" endtime="20230126 11:45:57.733"/>
+</kw>
+<status status="NOT RUN" starttime="20230126 11:45:57.732" endtime="20230126 11:45:57.733"/>
+</branch>
+<branch type="ELSE">
+<kw name="No Operation" library="BuiltIn">
+<doc>Does absolutely nothing.</doc>
+<status status="PASS" starttime="20230126 11:45:57.733" endtime="20230126 11:45:57.733"/>
+</kw>
+<status status="PASS" starttime="20230126 11:45:57.733" endtime="20230126 11:45:57.733"/>
+</branch>
+<status status="PASS" starttime="20230126 11:45:57.732" endtime="20230126 11:45:57.733"/>
+</if>
+<status status="PASS" starttime="20230126 11:45:57.479" endtime="20230126 11:45:57.734"/>
+</kw>
+<kw name="Check for error messages">
+<kw name="Is Element Visible" library="RPA.Browser.Selenium">
+<var>${error}</var>
+<arg>class:alert-danger</arg>
+<doc>Is element visible</doc>
+<msg timestamp="20230126 11:45:57.747" level="INFO" html="true">Ran with keyword &lt;b&gt;Element Should Be Visible&lt;/b&gt; which returned error: &lt;i&gt;Element with locator 'class:alert-danger' not found.&lt;/i&gt;</msg>
+<msg timestamp="20230126 11:45:57.747" level="INFO">${error} = False</msg>
+<status status="PASS" starttime="20230126 11:45:57.734" endtime="20230126 11:45:57.747"/>
+</kw>
+<if>
+<branch type="IF" condition="${error} == ${True}">
+<kw name="Submit the order">
+<status status="NOT RUN" starttime="20230126 11:45:57.748" endtime="20230126 11:45:57.748"/>
+</kw>
+<status status="NOT RUN" starttime="20230126 11:45:57.748" endtime="20230126 11:45:57.748"/>
+</branch>
+<branch type="ELSE">
+<kw name="No Operation" library="BuiltIn">
+<doc>Does absolutely nothing.</doc>
+<status status="PASS" starttime="20230126 11:45:57.748" endtime="20230126 11:45:57.748"/>
+</kw>
+<status status="PASS" starttime="20230126 11:45:57.748" endtime="20230126 11:45:57.748"/>
+</branch>
+<status status="PASS" starttime="20230126 11:45:57.747" endtime="20230126 11:45:57.749"/>
+</if>
+<status status="PASS" starttime="20230126 11:45:57.734" endtime="20230126 11:45:57.749"/>
+</kw>
+<kw name="${pdf}=Store the receipt as a PDF file">
+<arg>${row}[Order number]</arg>
+<msg timestamp="20230126 11:45:57.753" level="FAIL">No keyword with name '${pdf}=Store the receipt as a PDF file' found. Did you mean:
+    Store The Receipt As A PDF File</msg>
+<status status="FAIL" starttime="20230126 11:45:57.753" endtime="20230126 11:45:57.753"/>
+</kw>
+<kw name="Take a screenshot of the robot">
+<var>${screenshot}</var>
+<arg>${row}[Order number]</arg>
+<status status="NOT RUN" starttime="20230126 11:45:57.754" endtime="20230126 11:45:57.754"/>
+</kw>
+<kw name="Embed the robot screenshot to the receipt PDF file">
+<arg>${pdf}</arg>
+<arg>${screenshot}</arg>
+<status status="NOT RUN" starttime="20230126 11:45:57.754" endtime="20230126 11:45:57.754"/>
+</kw>
+<kw name="Go to order another robot">
+<status status="NOT RUN" starttime="20230126 11:45:57.755" endtime="20230126 11:45:57.755"/>
+</kw>
+<status status="FAIL" starttime="20230126 11:45:55.663" endtime="20230126 11:45:57.755"/>
+</iter>
+<status status="FAIL" starttime="20230126 11:45:55.662" endtime="20230126 11:45:57.755"/>
+</for>
+<kw name="Create a ZIP file of the receipts">
+<status status="NOT RUN" starttime="20230126 11:45:57.755" endtime="20230126 11:45:57.756"/>
+</kw>
+<kw name="Close Browser" library="RPA.Browser.Selenium" type="TEARDOWN">
+<doc>Closes the current browser.</doc>
+<status status="PASS" starttime="20230126 11:45:57.756" endtime="20230126 11:45:57.821"/>
+</kw>
+<status status="FAIL" starttime="20230126 11:45:38.101" endtime="20230126 11:45:57.821">No keyword with name '${pdf}=Store the receipt as a PDF file' found. Did you mean:
+    Store The Receipt As A PDF File</status>
+</test>
+<doc>Orders robots from RobotSpareBin Industries Inc.
+Saves the order HTML receipt as a PDF file.
+Saves the screenshot of the ordered robot.
+Embeds the screenshot of the robot to the PDF receipt.
+Creates ZIP archive of the receipts and the images.</doc>
+<status status="FAIL" starttime="20230126 11:45:36.022" endtime="20230126 11:45:57.822"/>
+</suite>
+<statistics>
+<total>
+<stat pass="0" fail="1" skip="0">All Tasks</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat pass="0" fail="1" skip="0" id="s1" name="Tasks">Tasks</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
